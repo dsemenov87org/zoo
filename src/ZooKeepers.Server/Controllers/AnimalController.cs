@@ -83,6 +83,8 @@ namespace ZooKeepers.Server.Controllers
         [HttpPost]
         public async Task<int> Post([FromBody] AnimalCreateModel model)
         {
+            Console.WriteLine($"!!!!! {ConnectionString} ");
+
             using (var db = new NpgsqlConnection(ConnectionString))
             {
                 await db.OpenAsync();
