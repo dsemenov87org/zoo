@@ -117,7 +117,7 @@ namespace ZooKeepers.Server.Controllers
             throw new NotImplementedException();
         }
 
-        private string ConnectionString => "server=db;userid=postgres;port=5432;database=zoo;";;
+        private string ConnectionString => "server=db;userid=postgres;port=5432;database=zoo;";
     }
 
     public class AnimalModel
