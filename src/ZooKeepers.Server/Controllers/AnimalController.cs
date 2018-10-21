@@ -28,9 +28,28 @@ namespace ZooKeepers.Server.Controllers
                 await db.OpenAsync();
 
                 var result = (await db.QueryAsync<AnimalModel>(@"
-                    SELECT id, userid, imguri
+                    SELECT id, name, imguri
                     FROM animal;
                 ")).ToArray();
+
+                return result;
+            }
+        }
+
+        [HttpGet("of-user/{userId}")]
+        public async Task<IEnumerable<AnimalModel>> GetByUser(string userId)
+        {
+            using (var db = new NpgsqlConnection(ConnectionString))
+            {
+                await db.OpenAsync();
+
+                var result = (await db.QueryAsync<AnimalModel>(@"
+                    SELECT a.id, a.name, a.imguri
+                    FROM animal AS a
+                        INNER JOIN user_animal AS ua
+                            ON a.id = ua.animalid
+                    WHERE ua.userid = @userId;
+                ", new{ userId })).ToArray();
 
                 return result;
             }
@@ -44,7 +63,7 @@ namespace ZooKeepers.Server.Controllers
                 await db.OpenAsync();
 
                 var result = (await db.QueryAsync<AnimalModel>(@"
-                    SELECT id, userid, imguri
+                    SELECT id, name, imguri
                     FROM animal
                     WHERE id = @id;
                 ", new { id })
@@ -69,8 +88,8 @@ namespace ZooKeepers.Server.Controllers
                 await db.OpenAsync();
 
                 var result = await db.QuerySingleAsync<int>(@"
-                    INSERT INTO animal (userid, imguri)
-                    VALUES (@UserId, @ImgUri)
+                    INSERT INTO animal (name, imguri)
+                    VALUES (@Name, @ImgUri)
                     RETURNING id;",
                     model);
 
@@ -78,14 +97,24 @@ namespace ZooKeepers.Server.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("{id}/users/{userId}")]
+        public async Task PutUser(int id, string userId)
         {
+            using (var db = new NpgsqlConnection(ConnectionString))
+            {
+                await db.OpenAsync();
+
+                await db.ExecuteAsync(@"
+                    INSERT INTO user_animal (animalid, userid)
+                    VALUES (@id, @userId);",
+                    new { id, userId });
+            }
         }
 
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            throw new NotImplementedException();
         }
 
         private string ConnectionString =>
@@ -97,13 +126,13 @@ namespace ZooKeepers.Server.Controllers
     public class AnimalModel
     {
         public int Id { get; set; }
-        public string UserId { get; set; }
+        public string Name { get; set; }
         public string ImgUri { get; set; }
     }
 
     public class AnimalCreateModel
     {
-        public string UserId { get; set; }
+        public string Name { get; set; }
         public string ImgUri { get; set; }
     }
 }
