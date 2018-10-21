@@ -8,7 +8,7 @@ RUN dotnet restore ./ZooKeepers.Server
 
 COPY ./src/ ./
 
-RUN dotnet publish --output /app/ --configuration Release
+RUN dotnet publish ./ZooKeepers.Server --output /app/ --configuration Release
 
 FROM microsoft/dotnet:2.1-aspnetcore-runtime
 
