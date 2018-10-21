@@ -4,7 +4,7 @@ pipeline:
         volumes:
             - /var/nuget/:/root/.nuget/packages/
         commands:
-            - dotnet publish --output `pwd`/out/ --configuration Release
+            - dotnet publish ZooKeepers.sln --output `pwd`/out/ --configuration Release
 
     publish:
         image: docker
