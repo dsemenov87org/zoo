@@ -1,10 +1,10 @@
 FROM microsoft/aspnetcore-build AS builder
 
-WORKDIR /source
+WORKDIR /sourcedocekr 
 
 COPY ./src/ZooKeepers.Server/*.csproj ./ZooKeepers.Server/
 
-RUN dotnet restore
+RUN dotnet restore ./ZooKeepers.Server
 
 COPY .src/ ./
 
