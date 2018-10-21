@@ -83,8 +83,6 @@ namespace ZooKeepers.Server.Controllers
         [HttpPost]
         public async Task<int> Post([FromBody] AnimalCreateModel model)
         {
-            Console.WriteLine($"!!!!! {ConnectionString} ");
-
             using (var db = new NpgsqlConnection(ConnectionString))
             {
                 await db.OpenAsync();
@@ -119,10 +117,7 @@ namespace ZooKeepers.Server.Controllers
             throw new NotImplementedException();
         }
 
-        private string ConnectionString =>
-            _config.GetValue<string>(
-                "ConnectionString",
-                "server=localhost;userid=postgres;port=5432;password=1;database=zoo;");
+        private string ConnectionString => "server=db;userid=postgres;port=5432;database=zoo;";;
     }
 
     public class AnimalModel
