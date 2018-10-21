@@ -1,0 +1,28 @@
+pipeline:
+    build:
+        image: microsoft/aspnetcore-build
+        volumes:
+            - /var/nuget/:/root/.nuget/packages/
+        commands:
+            - dotnet publish --output `pwd`/out/ --configuration Release
+
+    publish:
+        image: docker
+        commands:
+          - docker build -t zoo-server .
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
+
+    deploy:
+        image: docker
+        commands:
+          - docker run --rm -d zoo-server
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
+
+# services:
+#   db:
+#     image: postgres:alpine
+
+#   cache:
+#     image: redis:alpine
