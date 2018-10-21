@@ -6,7 +6,7 @@ COPY ./src/ZooKeepers.Server/*.csproj ./ZooKeepers.Server/
 
 RUN dotnet restore ./ZooKeepers.Server
 
-COPY .src/ ./
+COPY ./src/ ./
 
 RUN dotnet publish --output /app/ --configuration Release
 
