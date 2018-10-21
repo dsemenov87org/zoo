@@ -1,4 +1,4 @@
-FROM microsoft/aspnetcore-build AS builder
+FROM microsoft/dotnet:2.1-sdk AS builder
 
 WORKDIR /sourcedocekr 
 
@@ -10,7 +10,7 @@ COPY .src/ ./
 
 RUN dotnet publish --output /app/ --configuration Release
 
-FROM microsoft/aspnetcore
+FROM microsoft/dotnet:2.1-aspnetcore-runtime
 
 WORKDIR /app
 
